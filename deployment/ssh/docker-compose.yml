@@ -1,0 +1,93 @@
+version: '3.7'
+
+services:
+
+  traefik:
+    image: traefik:v2.2
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.httpchallenge=true
+      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.myresolver.acme.email=s.gouider@thecodingmachine.com
+      - --certificatesresolvers.myresolver.acme.storage=/acme.json
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - ./traefik/acme.json:/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)
+      - traefik.http.routers.http-catchall.entrypoints=web
+      - traefik.http.routers.http-catchall.middlewares=redirect-to-https
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+
+  webapp:
+    image: git.thecodingmachine.com:444/tcm-projects/oasys/webapp:$DOCKER_TAG
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.extranet_router.rule=Host(`${HOST_URL}`)
+      - traefik.http.routers.extranet_router.tls.certresolver=myresolver
+
+  api:
+    image: git.thecodingmachine.com:444/tcm-projects/oasys/api:$DOCKER_TAG
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api_router.rule=Host(`api.${HOST_URL}`)
+      - traefik.http.routers.api_router.tls.certresolver=myresolver
+    volumes:
+      - ./uploads:/var/www/html/public/files:rw
+    environment:
+      DATABASE_URL: "mysql://$MYSQL_USER:$MYSQL_PASSWORD@mysql:3306/$MYSQL_DATABASE"
+
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "$MYSQL_ROOT_PASSWORD"
+      MYSQL_DATABASE: "$MYSQL_DATABASE"
+      MYSQL_USER: "$MYSQL_USER"
+      MYSQL_PASSWORD: "$MYSQL_PASSWORD"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.9
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.phpmyadmin_router.rule=Host(`db.${HOST_URL}`)
+      - traefik.http.routers.phpmyadmin_router.tls.certresolver=myresolver
+    environment:
+      PMA_HOST: "mysql"
+
+  redis:
+    image: bitnami/redis:5.0
+    volumes:
+      - redis_data:/bitnami/redis/data
+
+  redisinsight:
+    image: redislabs/redisinsight
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.redis.rule=Host(`redis.${HOST_URL}`)
+      - traefik.http.routers.redis.service=redis_service
+      - traefik.http.services.redis_service.loadbalancer.server.port=8001
+    volumes:
+      - redisinsight_data:/db
+
+volumes:
+
+  mysql_data:
+    driver: local
+
+  redis_data:
+    driver: local
+
+  redisinsight_data:
+    driver: local

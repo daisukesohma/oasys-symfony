@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs>
+        <linearGradient id="prefix__a" x1="100%" x2="0%" y1="0%" y2="100%">
+            <stop offset="0%" stop-color="#B837B3"/>
+            <stop offset="100%" stop-color="#7F267B"/>
+        </linearGradient>
+    </defs>
+    <path fill="url(#prefix__a)" d="M12.333 9.667H17a1.333 1.333 0 110 2.666h-4.667V17a1.333 1.333 0 11-2.666 0v-4.667H5a1.333 1.333 0 110-2.666h4.667V5a1.333 1.333 0 112.666 0v4.667z" transform="rotate(45 11 11)"/>
+</svg>

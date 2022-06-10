@@ -1,0 +1,163 @@
+stages:
+  - test
+  - build
+  - deploy
+  - cleanup
+
+test_api:
+  image: thecodingmachine/php:7.4-v3-cli
+  stage: test
+  services:
+    - name: mysql:8
+      alias: mysql_tests
+      command: ["--default-authentication-plugin=mysql_native_password"]
+  variables:
+    # Docker image
+    APACHE_DOCUMENT_ROOT: "public/"
+    PHP_EXTENSION_XDEBUG: "1"
+    PHP_EXTENSION_GD: "1"
+    PHP_INI_MEMORY_LIMIT: "1G"
+    PHP_INI_UPLOAD_MAX_FILESIZE: "10M"
+    PHP_INI_SESSION__GC_MAXLIFETIME: "86400"
+    # Docker MySQL image (should be the same as "mysql_tests" service in docker-compose.yml)
+    MYSQL_ROOT_PASSWORD: "admin"
+    MYSQL_DATABASE: "tests"
+    MYSQL_USER: "tests"
+    MYSQL_PASSWORD: "secret"
+    MONOLOG_LOGGING_PATH: "php://stderr"
+    DATABASE_URL: "mysql://$MYSQL_USER:$MYSQL_PASSWORD@mysql:3306/$MYSQL_DATABASE"
+    TEST_DATABASE_URL: "mysql://tests:secret@mysql_tests/tests"
+  before_script:
+    - cd src/api
+    - echo "$ENV_API_TEST" > .env
+  script:
+    - composer install
+    - cat .env.local.php
+    - composer analyze
+    - php bin/phpunit --colors=never
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+
+test_webapp:
+  image: thecodingmachine/nodejs:12-apache
+  stage: test
+  variables:
+    # Apollo
+    VUE_APP_GRAPHQL_HTTP: "http://api.oasys.ci/graphql"
+    # Apache
+    APACHE_DOCUMENT_ROOT: "dist/"
+  before_script:
+    - cd src/webapp
+  script:
+    - npm install
+    - npm run build
+
+.build_push_api_image:
+  stage: build
+  image: docker:git
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: "overlay2"
+    ENV_API_NAME: "foo"
+  before_script:
+    - cd src/api
+    - echo "$ENV_API_NAME" > .env
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.thecodingmachine.com:444
+    - docker build -t git.thecodingmachine.com:444/tcm-projects/oasys/api:${CI_COMMIT_REF_SLUG} .
+    - docker push git.thecodingmachine.com:444/tcm-projects/oasys/api:${CI_COMMIT_REF_SLUG}
+
+.build_push_webapp_image:
+  stage: build
+  image: docker:git
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: "overlay2"
+    VUE_APP_GRAPHQL_HTTP: "foo"
+  before_script:
+    - cd src/webapp
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.thecodingmachine.com:444
+    - docker build  --build-arg VUE_APP_GRAPHQL_HTTP=${VUE_APP_GRAPHQL_HTTP} -t git.thecodingmachine.com:444/tcm-projects/oasys/webapp:${CI_COMMIT_REF_SLUG} .
+    - docker push git.thecodingmachine.com:444/tcm-projects/oasys/webapp:${CI_COMMIT_REF_SLUG}
+
+build_push_api_image_develop:
+  extends: .build_push_api_image
+  variables:
+    ENV_API_NAME: "$ENV_API_RECETTE"
+  only:
+    - develop
+
+build_push_webapp_image_develop:
+  extends: .build_push_webapp_image
+  variables:
+    VUE_APP_GRAPHQL_HTTP: "https://api.recette.oasysconsultants.fr/graphql"
+  only:
+    - develop
+
+deploy_production:
+  stage: deploy
+  image: thecodingmachine/php:7.4-v3-cli-node12
+  variables:
+    # SSH
+    SERVER_SSH_HOST_NAME: '$PROD_SERVER_SSH_HOSTNAME'
+    SERVER_SSH_URL: "$PROD_SERVER_SSH_USERNAME@$PROD_SERVER_SSH_HOSTNAME"
+    SSH_PRIVATE_KEY: "$PROD_SSH_PRIVATE_KEY"
+    SSH_KNOWN_HOSTS: "$PROD_SSH_KNOWN_HOSTS"
+    SSH_ABSOLUTE_DIR_PATH: "/home/docker/.ssh"
+    # Server
+    SERVER_ABSOLUTE_HOME_DIR_PATH: "/home/oasys"
+    # Webapp
+    VUE_APP_GRAPHQL_HTTP: "https://app-api.oasys.fr/graphql"
+    # API
+    ENV_API_NAME: "$ENV_API_PROD"
+    ENV_WEBAPP_NAME: "$ENV_WEBAPP_PROD"
+    PHP_EXTENSION_GD: "1"
+    PHP_INI_MEMORY_LIMIT: "1G"
+  before_script:
+    # Install zip
+    - sudo apt-get install zip
+    # Configure SSH
+    - echo "$SSH_KNOWN_HOSTS" > "$SSH_ABSOLUTE_DIR_PATH/known_hosts"
+    - chmod 644 "$SSH_ABSOLUTE_DIR_PATH/known_hosts"
+    - cat "$SSH_ABSOLUTE_DIR_PATH/known_hosts"
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - ssh "$SERVER_SSH_URL" "echo foo"
+  script:
+    # API
+    - cd src/api
+    - echo "$ENV_API_NAME" > .env
+    - composer install
+    - zip -r api.zip .
+    - mv api.zip ../..
+    # Webapp
+    - cd ../webapp
+    - echo "$ENV_WEBAPP_NAME" > .env
+    - npm ci
+    - npm run build
+    - cd dist
+    - zip -r webapp.zip .
+    - mv webapp.zip ../../..
+    - cd ../../..
+    # Deploy
+    - scp api.zip "$SERVER_SSH_URL:$SERVER_ABSOLUTE_HOME_DIR_PATH"
+    - scp webapp.zip "$SERVER_SSH_URL:$SERVER_ABSOLUTE_HOME_DIR_PATH"
+    - ssh "$SERVER_SSH_URL" "rm -rf api && unzip api.zip -d api"
+    - ssh "$SERVER_SSH_URL" "ln -s ~/uploads ~/api/uploads"
+    - ssh "$SERVER_SSH_URL" "rm -f ~/api/var/log/prod.log && ln -s ~/logs/symfony.log ~/api/var/log/prod.log"
+    - ssh "$SERVER_SSH_URL" "rm -rf webapp && unzip webapp.zip -d webapp"
+    - ssh "$SERVER_SSH_URL" "cd api && php bin/console doctrine:migrations:migrate -n"
+    - ssh "$SERVER_SSH_URL" "cd api && php bin/console users:create-super-admin"
+    - ssh "$SERVER_SSH_URL" "cd api && php bin/console queue:schedule-events"
+    - ssh "$SERVER_SSH_URL" "rm -f api.zip && rm -f webapp.zip"
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://app.oasys.fr
+  when: manual
+  only:
+    - master
+
+
+

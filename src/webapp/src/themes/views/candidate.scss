@@ -1,0 +1,434 @@
+
+.candidate-header {
+  .feature {
+    font-size: 16px;
+  }
+
+  .main-txt {
+    font-size: 22px;
+  }
+}
+
+.candidate-home {
+  .wrapper-content--header {
+    padding-bottom: 150px;
+    background-size: 100% 100%;
+  }
+
+  .coache-content {
+    margin-left: 1.5rem;
+  }
+
+  .welcome-message {
+    font-size: 22px;
+  }
+  .pic-text {
+    font-size: 18px;
+  }
+
+  .footer-candidate-page {
+    padding: 20px;
+
+    .info {
+      margin-top: 32px;
+      margin-bottom: 32px;
+      text-align: center;
+      color: $gris-44;
+
+      &-italic {
+        font-style: italic;
+      }
+    }
+  }
+
+  .candidate-home-articles {
+    margin: auto;
+
+    .el-carousel__arrow {
+      background-color: $consultant-light;
+    }
+
+    h2 {
+      font-weight: bold;
+      font-size: 48px;
+    }
+
+    .article-title {
+      font-weight: bold;
+      font-size: 20px;
+      color: $gris-100;
+    }
+
+    .article-img-overlay {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .card-img-container {
+      border: red;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media only screen and (max-width: 770px) {
+      .card-img-container {display: none;}
+    }
+
+    .article-body {
+      background-color: white;
+      padding: 1.25em;
+      flex: 1 1 auto;
+    }
+
+    .article-tags-container {
+      position: absolute;
+      bottom: 0;
+      margin-left: 1.25em;
+    }
+
+    .article-tag {
+      font-size: 14px;
+      padding: 2px 6px 2px 6px;
+      border-radius: 4px;
+      background-color: grey;
+      color: $white-text;
+      display: inline-block;
+    }
+
+    .articles-img {
+      width: 100%;
+    }
+
+    .article-text {
+      font-size: 16px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      letter-spacing: normal;
+      color: $gris-100;
+    }
+  }
+
+  .container-faq-button {
+    text-align: center;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .candidate-home-event {
+    display: flex !important;
+    flex-direction: row;
+    margin-top: -150px;
+
+    .card-padding {
+      flex: 0 0 30%;
+      margin-right: 1em;
+    }
+
+    .card {
+      flex: 0 0 256px;
+      margin-right: 1em;
+      cursor: pointer;
+
+      .card-img {
+        height: 10em;
+        overflow: hidden;
+
+        .card-img-top {
+          border-radius: 0;
+        }
+      }
+
+      .card-title {
+        font-size: 20px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: normal;
+        color: #505d68;
+      }
+
+      .card-text {
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: normal;
+        color: #a1aeb7;
+      }
+    }
+
+    .ps__rail-x {
+      display: none;
+    }
+
+    &.big {
+      margin-left: calc(-5% - 32px);
+
+      .card {
+        flex: 0 0 768px;
+        margin-right: 2em;
+
+        .card-body {
+          .card-title {
+            font-size: 50px;
+          }
+
+          .card-text {
+            font-size: 26px;
+          }
+        }
+
+        .card-img-overlay {
+          background: rgba(0, 0, 0, .33);
+
+          .card-title {
+            font-size: 50px;
+            font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.28;
+            letter-spacing: normal;
+            color: $white-text;
+          }
+
+          .card-text {
+            font-size: 26px;
+            font-weight: 300;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.35;
+            letter-spacing: normal;
+            color: $white-text;
+          }
+        }
+
+        .card-img-container {
+          width: 100%;
+          overflow: hidden;
+
+          img {
+            height: auto;
+            width: auto;
+            max-width: 1200px;
+            max-height: 650px;
+          }
+        }
+      }
+    }
+  }
+
+  .your-coach {
+    margin-top: 8em;
+    position: relative;
+    width: 100%;
+    margin-bottom: 7em;
+
+    .background-box {
+      position: absolute;
+      left: calc(50% - 250px);
+      width: 716px;
+      border-radius: 20px;
+      height: 450px;
+      background-color: #7c3379;
+    }
+
+    h1 {
+      position: relative;
+      z-index: 10;
+      left: calc(45% + 30px);
+      top: 130px;
+      max-width: 400px;
+      font-size: 72px;
+      font-weight: bold;
+      font-stretch: condensed;
+      color: $gris-bg;
+    }
+
+    .coach-avatar {
+      position: relative;
+      left: 20%;
+      box-shadow: $box-shadow;
+      bottom: 125px;
+      border-radius: 20px;
+      height: auto;
+      max-width: 300px;
+      max-height: 300px;
+      width: 80%;
+      overflow: hidden;
+      z-index: 5;
+
+      img {
+        width: 100%;
+      }
+    }
+
+    .action-wrapper {
+      width: 703px;
+      height: 468px;
+      position: relative;
+      left: calc(50% - 200px);
+      margin-top: -300px;
+
+      .action-container {
+        max-width: 386px;
+        width: 90%;
+        height: auto;
+        box-shadow: $box-shadow;
+        border-radius: 20px;
+        background-color: #fff;
+        padding: 2em;
+        position: relative;
+        top: 170px;
+      }
+    }
+
+    @media only screen and (max-width: 1100px) {
+      height: 800px;
+
+      h1 {
+        position: relative;
+        width: 100%;
+        margin-bottom: 142px;
+        left: 0;
+        max-width: none;
+        top: 0;
+        color: $black-text;
+      }
+
+      .coach-avatar {
+        margin: auto;
+        left: 0;
+      }
+
+      .background-box {
+        width: 100%;
+        left: 0;
+        height: 510px;
+        background-color: $gris-100;
+      }
+
+      .action-wrapper {
+        width: 100%;
+        left: 0;
+
+        .action-container {
+          margin: auto;
+          left: 0;
+          border-radius: 20px;
+          top: 320px;
+        }
+      }
+    }
+  }
+
+  .your-progam {
+    color: $black-text;
+    margin: auto;
+    margin-bottom: 200px;
+    margin-top: 200px;
+
+    .date-event {
+      color: $carriere-darker;
+    }
+
+    .info-event {
+      display: inline-block;
+    }
+
+    .page-coach-tag {
+      vertical-align: top;
+      margin-top: 6px;
+    }
+
+    .icon-event {
+      vertical-align: top;
+    }
+
+    .your-program-title {
+      font-size: 72px;
+      font-weight: bold;
+    }
+
+    .program-title {
+      font-stretch: condensed;
+      font-weight: bold;
+      margin-bottom: 24px;
+      font-size: 32px !important;
+      color: $black-text;
+    }
+
+    .content {
+      background-color: white;
+      box-shadow: $box-shadow;
+      border-radius: 20px;
+      padding: 32px;
+    }
+
+    .label {
+      font-size: 16px;
+      text-transform: uppercase;
+      color: $gris_80;
+      font-weight: bold;
+    }
+
+    .info {
+      font-size: 20px;
+
+      img {
+        margin-right: 16px;
+      }
+
+      .event-start-visio {
+        display: inline-block;
+        margin-left: 8px;
+        &:first-child{
+          margin-left: 0px;
+        }
+        color: $vert;
+        border: 1px solid $vert;
+        height: 26px;
+        border-radius: 12px;
+        font-size: 16px;
+        padding: 1px 12px;
+        cursor: pointer;
+        line-height: 24px;
+
+        &:hover {
+          color: white;
+          background-color: $vert;
+        }
+      }
+    }
+  }
+}
+
+  .background-box {
+    width: 100%;
+    left: 0;
+    height: 510px;
+    background-color: $gris-100;
+  }
+
+  .action-wrapper {
+    width: 100%;
+    left: 0;
+
+    .action-container {
+      margin: auto;
+      left: 0;
+      border-radius: 20px;
+      top: 320px;
+    }
+  }
+
+.btn img {
+  max-width: 24px;
+}

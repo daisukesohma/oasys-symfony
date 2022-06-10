@@ -1,0 +1,311 @@
+.list-documents {
+    &--title {
+        font: bold 21px $font;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+    }
+    &--list {
+        > [class*="col-"] {
+            margin-bottom: 24px;
+        }
+    }
+}
+
+.list-document {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(115, 112, 114, 0.2);
+    position: relative;
+    padding: 24px 12px 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 24px;
+    height: 100%;
+    border: 2px solid transparent;
+    &--status {
+        display: block;
+        position: absolute;
+        height: 24px;
+        width: 74px;
+        background: $gris-bg;
+        border-radius: 5px;
+        top: 12px;
+        left: 12px;
+        display: flex;
+        font: normal 12px $font-2;
+        color: #0b1620;
+        display: flex;
+        align-items: center;
+        padding-left: 12px;
+        &:before {
+            display: block;
+            content: "";
+            height: 8px;
+            width: 8px;
+            margin-right: 8px;
+            border-radius: 50%;
+            background: $vert;
+        }
+
+        &.protected{
+            &::before{
+                background: $jaune;
+            }
+        }
+
+        &.private{
+            &::before{
+                background: $rouge;
+            }
+        }
+    }
+    img {
+        height: 80px;
+        width: auto;
+        margin-bottom: 20px;
+    }
+    &--title {
+        height: 44px;
+        width: 100%;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-align: center;
+        font: 600 16px /16px $font-2;
+        margin-bottom: 17px;
+    }
+    &--tag {
+        display: inline-block;
+        height: 16px;
+        width: auto;
+        padding: 2px 24px;
+        font: bold 10px / 13px $font;
+        color: white;
+        @include gradient-bg(231deg);
+        border-radius: 8px;
+    }
+
+}
+
+.list-document, .document-type-card {
+    &.current-view {
+        border-color: $primary;
+
+        .list-document--title {
+            color: $primary;
+        }
+    }
+}
+
+.document-type-card {
+    cursor: pointer;
+    background: white;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(115, 112, 114, 0.2);
+    display: flex;
+    align-items: center;
+    padding: 36px 18px;
+    height: 100%;
+
+    img {
+        height: 50px;
+    }
+
+    &--list {
+        margin: 26px 0 48px;
+        > [class*="col"] {
+            @include px(10px);
+        }
+    }
+
+    &--content {
+        margin-left: 14px;
+    }
+
+    h5 {
+        font: bold 22px / 29px $font;
+        color: $primary;
+        margin-bottom: 10px;
+    }
+
+    p {
+        margin-bottom: 0;
+    }
+}
+
+.document-view-panel {
+    padding-bottom: 70px;
+    &--title {
+        text-transform: uppercase;
+        font: bold 21px $font;
+        color: black;
+        margin-bottom: 0;
+    }
+
+    &--name {
+        text-align: center;
+        margin-top: 16px;
+        font: normal 24px $font-2;
+        margin-bottom: 44px;
+    }
+
+    &--rows{
+        >.row{
+            margin-bottom: 25px;
+        }
+    }
+
+    .todo-panel-wrap{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .detail {
+        &--label {
+            color: $gris_70;
+            font: bold 12px / 18px $font-2;
+            text-transform: uppercase;
+            text-align: right;
+            display: block;
+        }
+        &--value {
+            margin-bottom: 0;
+            font: normal 16px /18px $font-2;
+        }
+        &--avatar{
+            @include r(56px);
+            border-radius: 50%;
+            border: 1px solid $primary;
+            margin-bottom: 12px;
+        }
+    }
+
+    .list-document--status{
+        position: static;
+    }
+}
+
+@media screen and(max-width:992px) {
+    .document-type-card {
+        height: auto;
+        margin-bottom: 24px;
+    }
+}
+
+@media screen and(max-width:768px) {
+    .list-document {
+        height: auto;
+    }
+}
+
+.document-card {
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+
+    &--content {
+        width: calc(100% - 30px);
+        height: 80px;
+        border-top-left-radius: 11px;
+        border-bottom-left-radius: 11px;
+        background-blend-mode: color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        strong {
+            padding-right: 30px;
+            word-break: break-all;
+            font-size: 11px;
+            width: 100%;
+            display: block;
+            margin-left: 15px;
+        }
+    }
+
+    &.pdf &--content {
+        background-image:
+                linear-gradient(to bottom, $rouge, $rouge),
+                linear-gradient(to bottom, #CCC, #CCC);
+        strong {
+            color: $rouge;
+        }
+    }
+
+    &.image &--content {
+        background-image:
+                linear-gradient(to bottom, #8f81ff, #8f81ff),
+                linear-gradient(to bottom, #CCC, #CCC);
+        strong {
+            color: #8f81ff;
+        }
+    }
+
+    &.video &--content {
+        background-image:
+                linear-gradient(to bottom, $consultant-primary, $consultant-primary),
+                linear-gradient(to bottom, #CCC, #CCC);
+        strong {
+            color: $consultant-primary;
+        }
+    }
+
+    &.audio &--content {
+        background-image:
+                linear-gradient(to bottom, $jaune, $jaune),
+                linear-gradient(to bottom, #CCC, #CCC);
+        strong {
+            color: $jaune;
+        }
+    }
+
+    &.excel &--content {
+        background-image:
+                linear-gradient(to bottom, #09652A, #09652A),
+                linear-gradient(to bottom, #CCC, #CCC);
+        strong {
+            color: #09652A;
+        }
+    }
+
+    &.powerpoint &--content {
+        background-image:
+                linear-gradient(to bottom, #ED8405, #ED8405),
+                linear-gradient(to bottom, #CCC, #CCC);
+        strong {
+            color: #ED8405;
+        }
+    }
+
+    &.txt &--content {
+        background-image:
+                linear-gradient(to bottom, $azure, $azure),
+                linear-gradient(to bottom, #CCC, #CCC);
+        strong {
+            color: $azure;
+        }
+    }
+
+    &.word &--content {
+        background-image:
+                linear-gradient(to bottom, #264B7F, #264B7F),
+                linear-gradient(to bottom, #CCC, #CCC);
+        strong {
+            color: #264B7F;
+        }
+    }
+
+    &--image {
+        position: absolute;
+        right: 15px;
+    }
+
+    &--action {
+        position: absolute;
+        right: 5px;
+        bottom: 0;
+    }
+}

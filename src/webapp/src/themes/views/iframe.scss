@@ -1,0 +1,19 @@
+.iframe-yousign-container {
+  height: 100%;
+}
+
+.iframe-yousign {
+  width: 100%;
+  border: none;
+  height: calc(100% - 100px);
+}
+
+.iframe-yousign-nav-bar
+{
+  position: absolute;
+  line-height: 100px;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  height: 100px;
+}

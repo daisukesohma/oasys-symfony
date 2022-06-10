@@ -1,0 +1,107 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    app.secret_env: '%env(APP_SECRET)%'
+    app.mailer_from: '%env(MAILER_FROM)%'
+    app.root_path: '%env(ROOT_PATH)%'
+    app.model_import_name: '%env(MODEL_IMPORT_NAME)%'
+    app.info_pdf_name: '%env(INFO_PDF_NAME)%'
+    app.host_protocol: '%env(HOST_PROTOCOL)%'
+    app.host_url: '%env(HOST_URL)%'
+    app.yousign_app: '%env(YOUSIGN_APP)%'
+    app.site_oasys_link: '%env(SITE_OASYS_LINK)%'
+    app.linkedin_link: '%env(LINKEDIN_LINK)%'
+    app.twitter_link: '%env(TWITTER_LINK)%'
+    app.webhook_yousign_url: '%env(WEBHOOK_YOUSIGN_URL)%'
+    app.api_super_admin_first_name: '%env(API_SUPER_ADMIN_FIRST_NAME)%'
+    app.api_super_admin_last_name: '%env(API_SUPER_ADMIN_LAST_NAME)%'
+    app.api_super_admin_email: '%env(API_SUPER_ADMIN_EMAIL)%'
+    app.api_super_admin_phone: '%env(API_SUPER_ADMIN_PHONE)%'
+    app.api_super_admin_password: '%env(API_SUPER_ADMIN_PASSWORD)%'
+    app.monolog_logging_path: '%env(MONOLOG_LOGGING_PATH)%'
+    app.support_email: '%env(SUPPORT_EMAIL)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        public: true
+        exclude:
+            - '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+            - '../src/Domain/{Enum,Exception,Logging,Model}'
+            - '../src/Infrastructure/{DependencyInjection,Entity,Migrations,Tests,Iterator,QueryFactory}'
+            - '../src/Infrastructure/Security/SerializableUser.php'
+            - '../src/Kernel.php'
+
+    App\Infrastructure\Services\WiziSignClient:
+        arguments:
+            $apikey: '%env(YOUSIGN_TOKEN)%'
+            $mode: '%env(YOUSIGN_MODE)%'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Infrastructure\Controller\:
+        resource: '../src/Infrastructure/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments:
+            - !service { class: PDO, factory: ['@database_connection', 'getWrappedConnection'] }
+            - { lock_mode: 1 }
+
+    App\Domain\Repository\UserRepository:
+        class: App\Infrastructure\Dao\UserDao
+        public: true
+
+    App\Domain\Repository\DocumentRepository:
+        class: App\Infrastructure\Dao\DocumentDao
+        public: true
+
+    App\Infrastructure\Middlewares\CoachAuthorizationMiddleware:
+        class: App\Infrastructure\Middlewares\CoachAuthorizationMiddleware
+        public: true
+        tags: ['graphql.field_middleware']
+
+    App\Infrastructure\Middlewares\AdminAuthorizationMiddleware:
+        class: App\Infrastructure\Middlewares\AdminAuthorizationMiddleware
+        public: true
+        tags: ['graphql.field_middleware']
+
+    RedisClient\RedisClient:
+        class: RedisClient\RedisClient
+        public: true
+        arguments:
+            - { server: '%env(REDIS_SERVER)%' }
+
+    tdbm_default_cache:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments:
+            - '%kernel.project_dir%/cache/doctrine'
+
+    TheCodingMachine\TDBM\Configuration:
+        class: TheCodingMachine\TDBM\Configuration
+        arguments:
+            - 'App\Domain\Model'
+            - 'App\Infrastructure\Dao'
+            - '@doctrine.dbal.default_connection'
+            - '@TheCodingMachine\TDBM\Utils\DefaultNamingStrategy'
+            - '@tdbm_default_cache'
+            - null
+            - '@monolog.logger'
+            - ['@TheCodingMachine\Tdbm\GraphQL\GraphQLTypeAnnotator']
+            - '@TheCodingMachine\TDBM\Utils\Annotation\AnnotationParser'
+    formatterWithStackTrace:
+        class: Monolog\Formatter\LineFormatter
+        calls:
+            - [includeStacktraces]

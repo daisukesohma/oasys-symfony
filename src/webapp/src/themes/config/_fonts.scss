@@ -1,0 +1,15 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
+
+$font-1: Calibri, 'sans-serif';
+$font-2: 'Open Sans', sans-serif;
+
+$font: $font-1;
+
+@mixin font-1{
+    font-family: $font-1 !important;
+}
+
+h1,h2,h3,h4,h5,h6{
+    font-family: $font-1;
+}

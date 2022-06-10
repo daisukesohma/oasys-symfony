@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <defs>
+        <linearGradient id="lgborz3foa" x1="97.531%" x2="2.469%" y1="0%" y2="100%">
+            <stop offset="0%" stop-color="#B837B3"/>
+            <stop offset="100%" stop-color="#7F267B"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g transform="translate(-1392 -976) translate(1104 96) translate(288 880)">
+                    <rect width="32" height="32" fill="#EFEFEF" rx="16"/>
+                    <g fill="url(#lgborz3foa)" fill-rule="nonzero" transform="translate(6 6)">
+                        <path d="M11.56 4.997l3.524 3.614c.148.152.148.4 0 .553l-8.531 8.752-3.625.412c-.484.056-.894-.364-.84-.861l.403-3.719 8.53-8.751c.149-.153.39-.153.54 0zm6.328-.918l-1.906-1.956c-.594-.609-1.559-.609-2.156 0l-1.383 1.419c-.148.152-.148.4 0 .553l3.523 3.614c.149.153.39.153.54 0l1.382-1.418c.594-.613.594-1.603 0-2.212z"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

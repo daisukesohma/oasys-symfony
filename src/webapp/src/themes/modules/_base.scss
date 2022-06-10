@@ -1,0 +1,32 @@
+html,body{
+    height: 100%;
+}
+
+
+body{
+    display: flex;
+    flex-direction: column;
+    @include font-1;
+    #app{
+        height: 100%;
+    }
+}
+
+.panel-body
+{
+    padding-left: 16px;
+}
+
+.icon_link img {
+    width: 36px;
+}
+
+.container_social {
+    a {
+        margin-right: 18px;
+    }
+}
+
+.container_social a:last-child {
+    margin-right: 0;
+}

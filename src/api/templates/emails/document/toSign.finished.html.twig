@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="content">
+        <!--[if (mso)|(IE)]>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-first">
+            <tr>
+                <td align="center">
+                    <table cellpadding="0" cellspacing="0" border="0" class="w-500">
+                        <tr class="layout-full-width bg-transparent"><![endif]-->
+        <!--[if (mso)|(IE)]>
+        <td align="center" width="500"
+            class="table-ie2"
+            valign="top">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td class="td-ie-padding">
+        <![endif]-->
+        <div class="col num12 content-container">
+            <div class="w-100">
+                <!--[if (!mso)&(!IE)]><!-->
+                <div class="content-container-div">
+                    <!--<![endif]-->
+                    <table class="divider content-wrapper" border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation" valign="top">
+                        <tbody>
+                        <tr class="valign-top" valign="top">
+                            <td class="divider_inner column-text valign-top" valign="top">
+                                <table class="divider_content" border="0" cellpadding="0" cellspacing="0" width="100%" align="center" role="presentation" height="45" valign="top">
+                                    <tbody>
+                                    <tr class="valign-top" valign="top">
+                                        <td class="divider_content_footer" height="45" valign="top"><span></span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!--[if mso]>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                            <td class="footer-ie">
+                    <![endif]-->
+                    <div class="footer">
+                        <div>
+                            <p class="text-small">
+                                <span><strong>La procédure de signature est terminée !</strong></span>
+                            </p>
+                            <p class="text-small text-center">
+                                Bonjour,
+                            </p>
+                            <p class="text-small text-center">Nous vous informons que votre document <b class="bold">{{ documentName }}</b> a été signé par l'ensemble des parties.</p>
+
+                            <p class="text-small text-center">Vous pouvez consulter et télécharger le document en cliquant sur ce <a href="{{ link }}">lien</a>.</p>
+
+                            <p class="text-small text-center">Le service support est à votre disposition à l'adresse suivante : support-digital@oasys.fr pour toute question relative à cette procédure de signature.</p>
+                            
+                            <p class="text-small text-center">
+                                Cordialement,<br />
+                                L'équipe Oasys<br />
+                            </p>
+                        </div>
+                    </div>
+                    <!--[if mso]></td></tr></table><![endif]-->
+                    <table class="divider content-wrapper" border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation" valign="top">
+                        <tbody>
+                        <tr class="valign-top" valign="top">
+                            <td class="divider_inner column-text valign-top" valign="top">
+                                <table class="divider_content" border="0" cellpadding="0" cellspacing="0" width="100%" align="center" role="presentation" height="45" valign="top">
+                                    <tbody>
+                                    <tr class="valign-top" valign="top">
+                                        <td class="divider_content_footer" height="45" valign="top"><span></span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!--[if (!mso)&(!IE)]><!-->
+                </div>
+                <!--<![endif]-->
+            </div>
+        </div>
+        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+        <!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
+    </div>
+{% endblock %}

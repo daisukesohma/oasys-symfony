@@ -1,0 +1,33 @@
+.filters{
+    .date-picker {
+        min-width: 160px;
+    }
+
+    .filter-group{
+        display: none;
+        &--l{
+            display: flex;
+            align-items: center;
+        }
+
+        .filters-label {
+            line-height: 40px;
+            white-space: nowrap;
+        }
+    }
+}
+
+@include breakpoint-max(786px){
+    .filters{
+        .filter-group{
+            &--l{
+                display: none;
+            }
+
+            &--sm{
+                display: flex;
+            }
+        }
+    }
+    
+}

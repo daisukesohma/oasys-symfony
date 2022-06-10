@@ -1,0 +1,47 @@
+.title-faq {
+  color: $black-text;
+}
+
+.faq-search-field {
+  width: 70%;
+}
+
+.faq-theme {
+  .questions {
+    min-height: 130px;
+  }
+
+  .title {
+    font-weight: bold;
+    color: $black-text;
+  }
+
+  .question {
+    overflow-wrap: break-word;
+    color: $consultant-light;
+  }
+}
+
+.question-faq {
+  text-align: justify;
+  .theme {
+    color: $gris-100;
+    font-size: 18px;
+  }
+
+  .title {
+    font-weight: bold;
+    font-size: 26px;
+    color: $black-text;
+  }
+
+  .last-update {
+    color: $gris-100;
+  }
+
+  .response {
+    text-align: justify;
+    padding: 0;
+    white-space: pre-line;
+  }
+}
